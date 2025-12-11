@@ -8,7 +8,52 @@
 </div>
 
 <div class="container">
-    <h2>NEW ARRIVALS</h2>
+    <section class="py-5 text-center" style="width: 75%; margin: 0 auto">
+        <h2 class="mb-4">About us</h2>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit totam animi minus consectetur perferendis? Recusandae eos similique nostrum repudiandae esse adipisci provident dolorum. Voluptatem quis nobis facilis beatae iste ullam consequuntur blanditiis suscipit culpa, exercitationem omnis iusto aperiam nesciunt molestias veritatis molestiae nostrum. Deleniti aperiam distinctio fuga, velit aut sed debitis officia totam alias corporis et nobis inventore itaque nam perspiciatis explicabo maiores vel culpa qui provident cum.</p>
+    </section>
+
+    <h2>New Arrivals</h2>
+
+    <div class="row mt-4">
+        <!-- Card 1 -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow p-2" style="border: 0; border-radius: 26px">
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product Image">
+                <div class="card-body p-0">
+                    <h5 class="card-title">Nama Produk 1</h5>
+                    <p class="card-text">Rp 150.000</p>
+                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">Detail Produk</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow p-2" style="border: 0; border-radius: 26px">
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product Image">
+                <div class="card-body p-0">
+                    <h5 class="card-title">Nama Produk 1</h5>
+                    <p class="card-text">Rp 150.000</p>
+                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">Detail Produk</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-md-4 mb-4">
+            <div class="card shadow p-2" style="border: 0; border-radius: 26px">
+                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product Image">
+                <div class="card-body p-0">
+                    <h5 class="card-title">Nama Produk 1</h5>
+                    <p class="card-text">Rp 150.000</p>
+                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">Detail Produk</a>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
 
 <?php include 'views/layouts/footer.php'; ?>
