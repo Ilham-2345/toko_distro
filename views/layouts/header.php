@@ -31,7 +31,6 @@
         .logo { 
             font-family: 'Tilt Warp', sans-serif; 
             font-size: 2rem; 
-            font-weight: bold; 
             text-transform: lowercase; 
             letter-spacing: 1px; 
         }
