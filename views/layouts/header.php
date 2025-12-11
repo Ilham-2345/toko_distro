@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&display=swap" rel="stylesheet">
     <style>
         * { 
             --black: #000; 
@@ -28,7 +29,7 @@
             border-bottom: 1px solid #eee; 
         }
         .logo { 
-            font-family: 'Teko', sans-serif; 
+            font-family: 'Tilt Warp', sans-serif; 
             font-size: 2rem; 
             font-weight: bold; 
             text-transform: lowercase; 

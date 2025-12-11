@@ -1,8 +1,8 @@
 <?php include 'views/layouts/header.php'; ?>
 
 <div class="hero" style="position: relative; text-align: center;">
-    <img src="assets/img/img1.png" style="width: 100%; height: 80vh; object-fit: cover;">
-    <h1 style="position: absolute; top: 40%; left: 10%; font-family: 'Teko'; font-size: 5rem; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+    <img "assets/images/hero-denim.jpg"  style="width: 100%; height: 80vh; object-fit: cover;">
+    <h1 style="position: absolute; top: 40%; left: 10%; font-family: 'Tilt Warp'; font-size: 4rem; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
         thanksjabbran®
     </h1>
 </div>
@@ -24,7 +24,7 @@
                 <div class="card-body p-0">
                     <h5 class="card-title">Nama Produk 1</h5>
                     <p class="card-text">Rp 150.000</p>
-                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">Detail Produk</a>
+                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                 <div class="card-body p-0">
                     <h5 class="card-title">Nama Produk 1</h5>
                     <p class="card-text">Rp 150.000</p>
-                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">Detail Produk</a>
+                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 <div class="card-body p-0">
                     <h5 class="card-title">Nama Produk 1</h5>
                     <p class="card-text">Rp 150.000</p>
-                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">Detail Produk</a>
+                    <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
                 </div>
             </div>
         </div>
