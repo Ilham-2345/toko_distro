@@ -25,7 +25,7 @@
 <body>
     <nav>
         <div class="burger-menu">☰</div>
-        <div class="logo">thanksjokowi®</div>
+        <div class="logo">thanksjabbran®</div>
         <div class="icons">
             <a href="index.php?page=search">🔍</a>
             <a href="index.php?page=cart">🛒</a>
