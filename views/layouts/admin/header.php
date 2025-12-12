@@ -28,14 +28,6 @@
             padding: 20px 50px; 
             border-bottom: 1px solid #eee; 
         }
-        .logo { 
-            font-family: 'Tilt Warp', sans-serif; 
-            font-size: 2rem; 
-            text-transform: lowercase; 
-            letter-spacing: 1px; 
-            text-decoration: none;
-            color: black;
-        }
         .menu a { 
             text-decoration: none; 
             color: var(--black); 
@@ -52,20 +44,6 @@
         /* Layout Grid */
         .container { 
             padding: 50px; 
-        }
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: 
-            repeat(4, 1fr); gap: 30px; 
-        }
-        .card img { 
-            width: 100%; 
-            height: auto; 
-            object-fit: cover; 
-        }
-        .card h3 { 
-            font-size: 1rem; 
-            margin: 10px 0 5px; 
         }
         .btn-black { 
             background: var(--black); 
@@ -125,6 +103,12 @@
             opacity: 1;
             overflow-y: auto;
         }
+
+        .hover-bg:hover {
+            background-color: rgba(0,0,0,0.03);
+        }
+
+        button:focus { outline: none; box-shadow: none; }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -134,19 +118,49 @@
 <!-- HTML: Sidebar + Overlay (Tanpa x-show, memakai :style) -->
 <div x-data="{ open: false }" x-cloak>
 
-  <nav>
-    <div class="burger-menu" style="cursor: pointer" @click="open = !open">
-      <i class="bi bi-justify"></i>
-    </div>
+<nav class="position-relative">
+  <div class="burger-menu" style="cursor: pointer" @click="open = !open">
+    <i class="bi bi-justify"></i>
+  </div>
 
-    <a href="index.php?page=home" class="logo">thanksjabbran®</a>
+  <!-- Dropdown component -->
+  <div x-data="{ open: false }" class="d-inline-block ms-3" style="position: relative">
+    <!-- Icon -->
+    <button
+      @click="open = !open"
+      @keydown.escape="open = false"
+      aria-haspopup="true"
+      :aria-expanded="open"
+      class="btn p-0 border-0 bg-transparent"
+      style="line-height: 1"
+    >
+      <i class="bi bi-person-fill fs-4 text-dark"></i>
+    </button>
 
-    <div class="icons">
-      <a href="index.php?page=shop" class="text-dark"><i class="bi bi-search"></i></a>
-      <a href="index.php?page=cart" class="text-dark"><i class="bi bi-cart2"></i></a>
-      <a href="index.php?page=login" class="text-dark"><i class="bi bi-person-fill"></i></a>
+    <!-- Dropdown box -->
+    <div
+      x-cloak
+      x-show="open"
+      @click.outside="open = false"
+      x-transition:enter="transition ease-out duration-150"
+      x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+      x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+      x-transition:leave="transition ease-in duration-100"
+      x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+      x-transition:leave-end="opacity-0 translate-y-1 scale-95"
+      style="min-width: 180px; position: absolute; right: 0; margin-top: 8px; z-index: 9999;"
+      class="shadow rounded bg-white border"
+    >
+      <div class="py-2">
+        <a href="index.php?page=profile" class="d-block px-3 py-2 text-decoration-none text-dark hover-bg">Profile</a>
+        <a href="index.php?page=orders" class="d-block px-3 py-2 text-decoration-none text-dark hover-bg">Orders</a>
+        <div class="dropdown-divider my-1"></div>
+        <!-- jika logout di-handle oleh AuthController -->
+        <a href="index.php?page=auth&action=logout" class="d-block px-3 py-2 text-decoration-none text-dark">Logout</a>
+      </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <!-- Overlay: visibility & opacity di-handle oleh :style -->
   <div
@@ -166,9 +180,12 @@
     </div>
     
     <ul class="list-unstyled d-flex flex-column mt-5 ms-3 gap-3">
-      <li class="mb-3"><a href="index.php?page=shop" class="text-dark text-decoration-none">Shop</a></li>
-      <li class="mb-3"><a href="index.php?page=profile" class="text-dark text-decoration-none">About</a></li>
-      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Contact</a></li>
+      <li class="mb-3"><a href="index.php?page=shop" class="text-dark text-decoration-none">Dashboard</a></li>
+      <li class="mb-3"><a href="index.php?page=profile" class="text-dark text-decoration-none">Kelola Produk</a></li>
+      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Kategori</a></li>
+      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Stok</a></li>
+      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Pesanan</a></li>
+      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Laporan</a></li>
     </ul>
 
   </aside>

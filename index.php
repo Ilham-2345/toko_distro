@@ -24,11 +24,17 @@ switch ($page) {
         break;
     
     // Fitur Admin
+    case 'admin_dashboard':
+        require 'controllers/DashboardController.php';
+        break;
     case 'admin_products':
         require 'controllers/ProductController.php';
         break;
     case 'admin_orders':
         require 'controllers/OrderController.php';
+        break;
+    case 'auth':
+        require 'controllers/AuthController.php';
         break;
         
     // Fitur User

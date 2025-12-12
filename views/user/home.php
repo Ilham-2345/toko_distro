@@ -8,12 +8,6 @@
 </div>
 
 <div class="container">
-    <section class="py-5 text-center" style="width: 75%; margin: 0 auto">
-        <h2 class="mb-4">About us</h2>
-
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit totam animi minus consectetur perferendis? Recusandae eos similique nostrum repudiandae esse adipisci provident dolorum. Voluptatem quis nobis facilis beatae iste ullam consequuntur blanditiis suscipit culpa, exercitationem omnis iusto aperiam nesciunt molestias veritatis molestiae nostrum. Deleniti aperiam distinctio fuga, velit aut sed debitis officia totam alias corporis et nobis inventore itaque nam perspiciatis explicabo maiores vel culpa qui provident cum.</p>
-    </section>
-
     <section class="mb-3">
         <h2>New Arrivals</h2>
     
@@ -68,6 +62,10 @@
                 <a href="" style="color: white" class="ms-4 mb-5">Explore</a>
             </div>
         </div>
+    </section>
+
+    <section class="d-flex justify-content-center align-items-center" style="height: 50vh">
+        <a href="index.php?page=shop" class="text-light px-4 py-3 bg-dark icon-link" style="text-decoration: none">See more products</a>
     </section>
 </div>
 
