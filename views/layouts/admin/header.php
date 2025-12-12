@@ -153,7 +153,6 @@
     >
       <div class="py-2">
         <a href="index.php?page=profile" class="d-block px-3 py-2 text-decoration-none text-dark hover-bg">Profile</a>
-        <a href="index.php?page=orders" class="d-block px-3 py-2 text-decoration-none text-dark hover-bg">Orders</a>
         <div class="dropdown-divider my-1"></div>
         <!-- jika logout di-handle oleh AuthController -->
         <a href="index.php?page=auth&action=logout" class="d-block px-3 py-2 text-decoration-none text-dark">Logout</a>
@@ -180,10 +179,10 @@
     </div>
     
     <ul class="list-unstyled d-flex flex-column mt-5 ms-3 gap-3">
-      <li class="mb-3"><a href="index.php?page=shop" class="text-dark text-decoration-none">Dashboard</a></li>
-      <li class="mb-3"><a href="index.php?page=profile" class="text-dark text-decoration-none">Kelola Produk</a></li>
-      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Kategori</a></li>
-      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Stok</a></li>
+      <li class="mb-3"><a href="index.php?page=admin_dashboard" class="text-dark text-decoration-none">Dashboard</a></li>
+      <li class="mb-3"><a href="index.php?page=admin_products" class="text-dark text-decoration-none">Kelola Produk</a></li>
+      <li class="mb-3"><a href="index.php?page=admin_categories" class="text-dark text-decoration-none">Kelola Kategori</a></li>
+      <li class="mb-3"><a href="index.php?page=admin_stock" class="text-dark text-decoration-none">Kelola Stok</a></li>
       <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Pesanan</a></li>
       <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Laporan</a></li>
     </ul>

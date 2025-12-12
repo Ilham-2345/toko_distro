@@ -125,6 +125,27 @@
             opacity: 1;
             overflow-y: auto;
         }
+
+        /* Login */
+        .login-page {
+            background: url('./assets/images/hero.png');
+            background-size: cover;
+        }
+
+        .login-title {
+            font-family: 'Tilt Warp', sans-serif;
+            color: white;
+            text-shadow: 2px 2px 5px #303030ff;
+        }
+
+        .login-box-blurred {
+            background: rgba(255, 255, 255, 0.1); /* sedikit transparan */
+            backdrop-filter: blur(10px);          /* efek blur */
+            -webkit-backdrop-filter: blur(10px);  /* untuk Safari */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">

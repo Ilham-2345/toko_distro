@@ -30,8 +30,14 @@ switch ($page) {
     case 'admin_products':
         require 'controllers/ProductController.php';
         break;
+    case 'admin_categories':
+        require 'controllers/CategoriesController.php';
+        break;
     case 'admin_orders':
         require 'controllers/OrderController.php';
+        break;
+    case 'admin_stock':
+        require 'controllers/StockController.php';
         break;
     case 'auth':
         require 'controllers/AuthController.php';
