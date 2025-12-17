@@ -17,6 +17,19 @@ if (isset($_GET['action']) && $_GET['action'] === 'add') {
     }
 }
 
+// LOGIC UPDATE KATEGORI
+if (isset($_GET['action']) && $_GET['action'] === 'update') {
+
+    $id   = $_POST['id'];
+    $name = $_POST['name'];
+
+    $stmt = $pdo->prepare("UPDATE categories SET name = ? WHERE id = ?");
+    $stmt->execute([$name, $id]);
+
+    header("Location: index.php?page=admin_categories&status=updated");
+    exit;
+}
+
 // LOGIC HAPUS
 if (isset($_GET['delete_id'])) {
 
@@ -37,6 +50,11 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php include 'views/layouts/admin/header.php'; ?>
 
 <div class="container my-3">
+
+    <?php if(isset($_GET['status']) && $_GET['status'] === 'updated'): ?>
+        <div class="alert alert-info">Kategori berhasil diperbarui.</div>
+    <?php endif; ?>
+
 
     <h2 class="fw-bold mb-3">Manajemen Kategori</h2>
     <hr>
@@ -98,10 +116,16 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td class="text-center">
 
                                 <!-- Tombol Edit (Nanti bisa kamu buatkan halamannya) -->
-                                <a href="index.php?page=admin_categories_edit&id=<?= $c['id'] ?>" 
-                                   class="btn btn-success btn-sm px-3">
+                                <button 
+                                    class="btn btn-success btn-sm px-3 btn-edit-category"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editCategoryModal"
+                                    data-id="<?= $c['id'] ?>"
+                                    data-name="<?= htmlspecialchars($c['name']) ?>"
+                                >
                                     Edit
-                                </a>
+                                </button>
+
 
                                 <!-- Tombol Hapus -->
                                 <a href="index.php?page=admin_categories&delete_id=<?= $c['id'] ?>" 
@@ -115,13 +139,61 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php $i++; ?>
                         <?php endforeach; ?>
                     </tbody>
-
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form action="index.php?page=admin_categories&action=update" method="POST">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Kategori</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="id" id="edit-category-id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Nama Kategori</label>
+                        <input type="text" 
+                               name="name" 
+                               id="edit-category-name" 
+                               class="form-control" 
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn btn-dark">
+                        Update
+                    </button>
+                </div>
+
+            </form>
 
         </div>
     </div>
-
 </div>
+
+<script>
+    document.querySelectorAll('.btn-edit-category').forEach(btn => {
+        btn.addEventListener('click', function () {
+            document.getElementById('edit-category-id').value = this.dataset.id;
+            document.getElementById('edit-category-name').value = this.dataset.name;
+        });
+    });
+</script>
+
 
 <?php include 'views/layouts/admin/footer.php'; ?>
