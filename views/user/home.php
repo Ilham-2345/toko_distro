@@ -1,3 +1,17 @@
+<?php 
+
+// Ambil data produk
+$stmt = $pdo->query("
+    SELECT products.*, categories.name AS category_name
+    FROM products
+    LEFT JOIN categories ON products.category_id = categories.id
+    ORDER BY products.id DESC
+    LIMIT 3
+");
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
 <?php include 'views/layouts/header.php'; ?>
 
 <div class="hero" style="position: relative; text-align: center;">
@@ -12,41 +26,21 @@
         <h2>New Arrivals</h2>
     
         <div class="row mt-4">
-            <!-- Card 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow p-2" style="border: 0; border-radius: 26px">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product Image">
-                    <div class="card-body p-0">
-                        <h5 class="card-title">Nama Produk 1</h5>
-                        <p class="card-text">Rp 150.000</p>
-                        <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
+            <?php foreach ($products as $p): ?>
+                <!-- Card -->
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow p-2" style="border: 0; border-radius: 26px">
+                        <div class="card-body p-0">
+                            <div style="height: 350px; overflow: hidden">
+                                <img src="uploads/<?= $p['image'] ?>" class="card-img-top" alt="Product Image">
+                            </div>
+                            <h5 class="card-title mt-1"><?= $p['name'] ?></h5>
+                            <p class="card-text">Rp. <?= number_format($p['price']) ?></p>
+                            <a href="index.php?page=product_detail&id=<?= $p['id'] ?>" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-    
-            <!-- Card 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow p-2" style="border: 0; border-radius: 26px">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product Image">
-                    <div class="card-body p-0">
-                        <h5 class="card-title">Nama Produk 1</h5>
-                        <p class="card-text">Rp 150.000</p>
-                        <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
-                    </div>
-                </div>
-            </div>
-    
-            <!-- Card 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card shadow p-2" style="border: 0; border-radius: 26px">
-                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Product Image">
-                    <div class="card-body p-0">
-                        <h5 class="card-title">Nama Produk 1</h5>
-                        <p class="card-text">Rp 150.000</p>
-                        <a href="#" class="btn btn-dark w-100 py-2" style="border-radius: 20px">See details</a>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </div>
     </section>
 

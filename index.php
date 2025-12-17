@@ -16,6 +16,9 @@ switch ($page) {
     case 'home':
         include 'views/user/home.php';
         break;
+    case 'product_detail':
+        include 'views/user/product_detail.php';
+        break;
     case 'shop':
         include 'views/user/shop.php';
         break;
