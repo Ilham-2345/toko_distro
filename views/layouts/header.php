@@ -160,6 +160,17 @@
         .shop .card img {
             object-fit: cover;
         }
+        /* Hilangkan background hover & focus icon navbar */
+        .icons a,
+        .icons a:hover,
+        .icons a:focus,
+        .icons .dropdown-toggle,
+        .icons .dropdown-toggle:hover,
+        .icons .dropdown-toggle:focus {
+            background: transparent !important;
+            box-shadow: none !important;
+            color: black;
+        }
 
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -178,10 +189,77 @@
 
     <a href="index.php?page=home" class="logo">thanksjabbran®</a>
 
-    <div class="icons">
-      <a href="index.php?page=shop" class="text-dark"><i class="bi bi-search"></i></a>
-      <a href="index.php?page=cart" class="text-dark"><i class="bi bi-cart2"></i></a>
-      <a href="index.php?page=login" class="text-dark"><i class="bi bi-person-fill"></i></a>
+    <div class="icons d-flex align-items-center gap-3">
+
+        <a href="index.php?page=shop" class="text-dark">
+            <i class="bi bi-search"></i>
+        </a>
+
+        <?php if (!isset($_SESSION['user'])): ?>
+            <!-- <a href="index.php?page=cart" class="text-dark">
+                <i class="bi bi-cart2"></i>
+            </a> -->
+        <?php else: ?>
+            <a href="index.php?page=cart" class="text-dark">
+                <i class="bi bi-cart2"></i>
+            </a>
+        <?php endif; ?>
+
+        <?php if (!isset($_SESSION['user'])): ?>
+
+            <!-- BELUM LOGIN -->
+            <a href="index.php?page=login" class="text-dark">
+                <i class="bi bi-person-fill"></i>
+            </a>
+
+        <?php else: ?>
+
+            <!-- SUDAH LOGIN -->
+            <div class="dropdown">
+                <a href="#" 
+                class="text-dark dropdown-toggle"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                    <i class="bi bi-person-fill"></i>
+                </a>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm pe-3">
+
+                    <!-- PROFILE -->
+                    <li>
+                        <a class="dropdown-item" href="index.php?page=profile">
+                            <i class="bi bi-person me-2"></i> Profile
+                        </a>
+                    </li>
+
+                    <!-- DASHBOARD (STAFF & ADMIN) -->
+                    <?php if (
+                        $_SESSION['user']['role'] === 'admin' ||
+                        $_SESSION['user']['role'] === 'pegawai'
+                    ): ?>
+                        <li>
+                            <a class="dropdown-item" href="index.php?page=admin_dashboard">
+                                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                            </a>
+                        </li>
+                    <?php endif; ?>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <!-- LOGOUT -->
+                    <li>
+                        <a class="dropdown-item text-danger"
+                        href="index.php?page=auth&action=logout">
+                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+
+        <?php endif; ?>
+
     </div>
   </nav>
 
@@ -207,6 +285,5 @@
       <li class="mb-3"><a href="index.php?page=profile" class="text-dark text-decoration-none">About</a></li>
       <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Contact</a></li>
     </ul>
-
   </aside>
 </div>

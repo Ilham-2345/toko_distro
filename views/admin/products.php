@@ -29,8 +29,32 @@ if (isset($_GET['action']) && $_GET['action'] === 'add') {
     }
 
     // Simpan ke DB
-    $stmt = $pdo->prepare("INSERT INTO products (name, price, category_id, image, description) VALUES (?, ?, ?, ?, ?)");
+    // =============================
+    // INSERT PRODUK
+    // =============================
+    $stmt = $pdo->prepare("
+        INSERT INTO products (name, price, category_id, image, description)
+        VALUES (?, ?, ?, ?, ?)
+    ");
     $stmt->execute([$name, $price, $categoryId, $fileName, $description]);
+
+    // Ambil ID produk yang baru dibuat
+    $productId = $pdo->lastInsertId();
+
+    // =============================
+    // AUTO CREATE STOK PER SIZE
+    // =============================
+    $sizes = $pdo->query("SELECT id FROM sizes")->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmtSize = $pdo->prepare("
+        INSERT INTO product_sizes (product_id, size_id, stock)
+        VALUES (?, ?, 0)
+    ");
+
+    foreach ($sizes as $size) {
+        $stmtSize->execute([$productId, $size['id']]);
+    }
+
 
     header("Location: index.php?page=admin_products&status=success");
     exit;
@@ -205,7 +229,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             <td><?= $p['name'] ?></td>
                             <td><?= $p['category_name'] ?: '-' ?></td>
-                            <td>Rp <?= number_format($p['price']) ?></td>
+                            <td>Rp <?= number_format(!empty($p['price']) ? $p['price'] : 0) ?></td>
 
                             <td class="text-center">
                                 <button 
