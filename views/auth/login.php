@@ -14,7 +14,7 @@
                     </div>
                     <button type="submit" class="btn" style="background: black; color: white">SIGN IN</button>
                 </form>
-                <p class="text-center"><small>Belum punya akun? <a href="#">Register</a></small></p>
+                <p class="text-center"><small>Belum punya akun? <a href="index.php?page=register">Register</a></small></p>
             </div>
         </div>
     </div>

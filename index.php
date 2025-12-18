@@ -16,12 +16,22 @@ switch ($page) {
     case 'home':
         include 'views/user/home.php';
         break;
+    case 'product_detail':
+        include 'views/user/product_detail.php';
+        break;
     case 'shop':
         include 'views/user/shop.php';
         break;
     case 'login':
         include 'views/auth/login.php';
         break;
+    case 'register':
+        include 'views/auth/register.php';
+        break;
+    case 'profile':
+        include 'views/user/profile.php';
+        break;
+
     
     // Fitur Admin
     case 'admin_dashboard':

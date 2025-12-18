@@ -1,0 +1,125 @@
+* {
+  --black: #000;
+  --white: #fff;
+  font-family: 'Geist', sans-serif;
+}
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--black);
+}
+
+/* Navbar Minimalis */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  border-bottom: 1px solid #eee;
+}
+.menu a {
+  text-decoration: none;
+  color: var(--black);
+  margin: 0 15px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.icons a {
+  margin-left: 20px;
+  text-decoration: none;
+}
+
+/* Layout Grid */
+.container {
+  padding: 50px;
+}
+.btn-black {
+  background: var(--black);
+  color: var(--white);
+  padding: 10px 20px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* sembunyikan saat awal (x-cloak) */
+[x-cloak] {
+  display: none !important;
+}
+
+/* NAV agar tetap di atas konten kalau perlu */
+nav {
+  position: relative;
+  z-index: 60; /* optional */
+  background: transparent;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Overlay full-screen (fade) */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 45;
+  /* transisi smooth untuk opacity & visibility */
+  transition: opacity 300ms ease, visibility 300ms ease;
+  /* start hidden by default (visibility controlled inline via :style) */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Sidebar kiri */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 400px;
+  max-width: 85%;
+  height: 100vh;
+  background: #fff;
+  z-index: 70; /* NAIKKAN agar lebih tinggi dari navbar & overlay */
+  padding: 20px;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+
+  transform: translateX(-100%);
+  transition: transform 320ms cubic-bezier(0.2, 0.9, 0.2, 1), opacity 220ms ease;
+  will-change: transform;
+  opacity: 1;
+  overflow-y: auto;
+}
+
+.hover-bg:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.dashboard-card {
+  transition: all 0.3s ease;
+  border-radius: 15px;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.icon-box {
+  width: 70px;
+  height: 70px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

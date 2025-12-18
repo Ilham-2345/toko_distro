@@ -1,3 +1,38 @@
+<?php 
+$cartItems = [];
+
+if (!empty($_SESSION['cart'])) {
+
+    foreach ($_SESSION['cart'] as $productId => $sizes) {
+
+        foreach ($sizes as $sizeId => $qty) {
+
+            $stmt = $pdo->prepare("
+                SELECT 
+                    p.id,
+                    p.name,
+                    p.price,
+                    p.image,
+                    s.id AS size_id,
+                    s.name AS size_name
+                FROM products p
+                JOIN product_sizes ps ON p.id = ps.product_id
+                JOIN sizes s ON ps.size_id = s.id
+                WHERE p.id = ? AND s.id = ?
+            ");
+            $stmt->execute([$productId, $sizeId]);
+            $item = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($item) {
+                $item['qty'] = $qty;
+                $cartItems[] = $item;
+            }
+        }
+    }
+}
+
+?>
+
 <?php include 'views/layouts/header.php'; ?>
 
 <style>
@@ -30,12 +65,11 @@
     <h1>Shopping Cart</h1>
 
     <?php if (empty($cartItems)): ?>
-        <p style="text-align: center; padding: 50px; background: #f9f9f9;">
+        <p style="text-align: center; padding: 50px;">
             Keranjang kamu kosong. <br><br>
             <a href="index.php?page=shop" style="color: black; font-weight: bold;">Mulai Belanja &rarr;</a>
         </p>
     <?php else: ?>
-        
         <table class="cart-table">
             <thead>
                 <tr>
@@ -47,37 +81,51 @@
                 </tr>
             </thead>
             <tbody>
-                <?php 
-                $grandTotal = 0;
-                foreach ($cartItems as $item): 
-                    $qty = $_SESSION['cart'][$item['id']];
-                    $subtotal = $item['price'] * $qty;
-                    $grandTotal += $subtotal;
-                ?>
-                <tr>
-                    <td>
-                        <div class="product-info">
-                            <img src="uploads/<?= $item['image'] ?>" alt="Img">
-                            <div>
-                                <strong><?= $item['name'] ?></strong><br>
-                                <small>ID: #<?= $item['id'] ?></small>
-                            </div>
+                
+            <?php 
+            $grandTotal = 0;
+            foreach ($cartItems as $item): 
+                $subtotal = $item['price'] * $item['qty'];
+                $grandTotal += $subtotal;
+            ?>
+            <tr>
+                <td>
+                    <div class="product-info">
+                        <img src="uploads/<?= $item['image'] ?>">
+                        <div>
+                            <strong><?= $item['name'] ?></strong><br>
+                            <small>Size: <?= $item['size_name'] ?></small>
                         </div>
-                    </td>
-                    <td>Rp <?= number_format($item['price']) ?></td>
-                    <td>
-                        <div class="qty-control">
-                            <a href="index.php?page=cart&action=update&type=minus&id=<?= $item['id'] ?>">-</a>
-                            <span><?= $qty ?></span>
-                            <a href="index.php?page=cart&action=update&type=plus&id=<?= $item['id'] ?>">+</a>
-                        </div>
-                    </td>
-                    <td>Rp <?= number_format($subtotal) ?></td>
-                    <td>
-                        <a href="index.php?page=cart&action=delete&id=<?= $item['id'] ?>" class="btn-remove" onclick="return confirm('Hapus item ini?')">× Remove</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                    </div>
+                </td>
+
+                <td>Rp <?= number_format($item['price']) ?></td>
+
+                <td x-data="{ qty: <?= $item['qty'] ?> }">
+                    <div class="d-flex align-items-center gap-2">
+                        <a 
+                            href="index.php?page=cart&action=update&pid=<?= $item['id'] ?>&size=<?= $item['size_id'] ?>&type=minus"
+                            class="btn btn-sm btn-outline-dark"
+                        >−</a>
+
+                        <span x-text="qty"></span>
+
+                        <a 
+                            href="index.php?page=cart&action=update&pid=<?= $item['id'] ?>&size=<?= $item['size_id'] ?>&type=plus"
+                            class="btn btn-sm btn-outline-dark"
+                        >+</a>
+                    </div>
+                </td>
+
+                <td>Rp <?= number_format($subtotal) ?></td>
+
+                <td>
+                    <a href="index.php?page=cart&action=delete&pid=<?= $item['id'] ?>&size=<?= $item['size_id'] ?>" 
+                    class="btn-remove">× Remove</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+
             </tbody>
         </table>
 
