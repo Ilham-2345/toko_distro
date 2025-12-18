@@ -1,19 +1,11 @@
 <?php
-if (!isset($_GET['id'])) {
-    header("Location: index.php");
-    exit;
-}
-
-$productId = $_GET['id'];
-
+// Ambil data produk
 $stmt = $pdo->prepare("
-    SELECT products.*, categories.name AS category_name
-    FROM products
-    LEFT JOIN categories ON products.category_id = categories.id
-    WHERE products.id = ?
+    SELECT p.*
+    FROM products p
+    WHERE p.id = ?
 ");
-$stmt->execute([$productId]);
-
+$stmt->execute([$_GET['id']]);
 $product = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Jika produk tidak ditemukan
@@ -21,6 +13,20 @@ if (!$product) {
     echo "Produk tidak ditemukan.";
     exit;
 }
+
+// Ambil stok per size
+$stmt = $pdo->prepare("
+    SELECT s.id, s.name, ps.stock
+    FROM product_sizes ps
+    JOIN sizes s ON ps.size_id = s.id
+    WHERE ps.product_id = ?
+");
+$stmt->execute([$product['id']]);
+$sizes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Hitung total stok
+$totalStock = array_sum(array_column($sizes, 'stock'));
+
 ?>
 
 
@@ -36,40 +42,52 @@ if (!$product) {
 
         <!-- KANAN: DETAIL PRODUK -->
         <div class="col-md-7">
-
-            <span class="badge bg-dark mb-2">In Stock</span>
-
             <h4 class="fw-bold mt-2"><?= $product['name'] ?></h4>
 
             <h5 class="fw-semibold my-3">
                 Rp <?= number_format($product['price']) ?>
             </h5>
 
-            <span class="badge bg-dark mb-2">
-                <?= $product['stock'] > 0 ? 'In Stock' : 'Out of Stock' ?>
+            <span class="badge bg-<?= $totalStock > 0 ? 'success' : 'secondary' ?> mb-2">
+                <?= $totalStock > 0 ? 'In Stock' : 'Out of Stock' ?>
             </span>
 
-            <p>Total Stok: <strong><?= $product['stock'] ?></strong></p>
+            <p>Total Stok: <strong><?= $totalStock ?></strong></p>
+
 
             <!-- STOK PER UKURAN -->
-            <div class="d-flex gap-4 mb-4">
-                <div class="text-center size-item">
-                    <img src="tshirt.jpg" alt="">
-                    <div class="small mt-1">S : 2</div>
+            <form action="index.php?page=cart&action=add" method="POST">
+                <input type="hidden" name="size_id" id="selected_size">
+                <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                <div class="d-flex gap-3 mb-4 flex-wrap">
+                    <?php foreach ($sizes as $s): ?>
+                        <?php if ($s['stock'] > 0): ?>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-dark size-btn"
+                                data-size="<?= $s['id'] ?>"
+                            >
+                                <?= $s['name'] ?>
+                                <div class="small">Sisa <?= $s['stock'] ?></div>
+                            </button>
+                        <?php else: ?>
+                            <button 
+                                type="button"
+                                class="btn btn-outline-secondary disabled"
+                                disabled
+                            >
+                                <?= $s['name'] ?>
+                                <div class="small">Habis</div>
+                            </button>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
-                <div class="text-center size-item">
-                    <img src="tshirt.jpg" alt="">
-                    <div class="small mt-1">M : 3</div>
-                </div>
-                <div class="text-center size-item">
-                    <img src="tshirt.jpg" alt="">
-                    <div class="small mt-1">L : 2</div>
-                </div>
-                <div class="text-center size-item">
-                    <img src="tshirt.jpg" alt="">
-                    <div class="small mt-1">XL : 2</div>
-                </div>
-            </div>
+
+                <button type="submit" class="btn btn-dark" id="addToCartBtn" disabled>
+                    Add to Cart
+                </button>
+            </form>
+
 
             <hr>
 
@@ -84,4 +102,28 @@ if (!$product) {
         </div>
     </div>
 </div>
+
+<script>
+    const sizeButtons = document.querySelectorAll('.size-btn');
+    const sizeInput   = document.getElementById('selected_size');
+    const addBtn      = document.getElementById('addToCartBtn');
+
+    sizeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+
+            // reset active
+            sizeButtons.forEach(b => b.classList.remove('active'));
+
+            // set active
+            btn.classList.add('active');
+
+            // set hidden input
+            sizeInput.value = btn.dataset.size;
+
+            // enable add to cart
+            addBtn.disabled = false;
+        });
+    });
+</script>
+
 <?php include 'views/layouts/footer.php'; ?>

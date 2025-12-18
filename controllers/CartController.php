@@ -1,47 +1,108 @@
 <?php
-// controllers/CartController.php
-
-// 1. TAMBAH ITEM KE CART
+// Add cart
 if ($action == 'add') {
-    $id = $_GET['id'];
-    // Jika belum ada, set 1. Jika sudah, tambah 1.
-    if (!isset($_SESSION['cart'][$id])) {
-        $_SESSION['cart'][$id] = 1;
-    } else {
-        $_SESSION['cart'][$id]++;
+    $productId = $_POST['product_id'];
+    $sizeId    = $_POST['size_id'];
+
+    // Validasi stok size
+    $stmt = $pdo->prepare("
+        SELECT stock FROM product_sizes
+        WHERE product_id = ? AND size_id = ?
+    ");
+    $stmt->execute([$productId, $sizeId]);
+    $stock = $stmt->fetchColumn();
+
+    if ($stock <= 0) {
+        echo "<script>alert('Stok size ini habis');history.back();</script>";
+        exit;
     }
-    // Redirect kembali ke halaman sebelumnya atau cart
+
+    // Init cart
+    if (!isset($_SESSION['cart'][$productId])) {
+        $_SESSION['cart'][$productId] = [];
+    }
+
+    if (!isset($_SESSION['cart'][$productId][$sizeId])) {
+        $_SESSION['cart'][$productId][$sizeId] = 1;
+    } else {
+        // Cegah melebihi stok
+        if ($_SESSION['cart'][$productId][$sizeId] < $stock) {
+            $_SESSION['cart'][$productId][$sizeId]++;
+        }
+    }
+
     header("Location: index.php?page=cart");
     exit;
 }
+
 
 // 2. HAPUS ITEM
 if ($action == 'delete') {
-    $id = $_GET['id'];
-    unset($_SESSION['cart'][$id]);
+    $productId = $_GET['pid'];
+    $sizeId    = $_GET['size'];
+
+    unset($_SESSION['cart'][$productId][$sizeId]);
+
+    // Jika size kosong, hapus produk
+    if (empty($_SESSION['cart'][$productId])) {
+        unset($_SESSION['cart'][$productId]);
+    }
+
     header("Location: index.php?page=cart");
     exit;
 }
 
-// 3. UPDATE QUANTITY (Plus/Minus)
+// 3. UPDATE QUANTITY (Plus / Minus) BERDASARKAN STOK
 if ($action == 'update') {
-    $id = $_GET['id'];
-    $type = $_GET['type']; // 'plus' atau 'minus'
-    
-    if (isset($_SESSION['cart'][$id])) {
-        if ($type == 'plus') {
-            $_SESSION['cart'][$id]++;
-        } elseif ($type == 'minus') {
-            $_SESSION['cart'][$id]--;
-            // Jika 0, hapus item
-            if ($_SESSION['cart'][$id] <= 0) {
-                unset($_SESSION['cart'][$id]);
+
+    $productId = $_GET['pid'];
+    $sizeId    = $_GET['size'];
+    $type      = $_GET['type']; // plus / minus
+
+    // Pastikan item ada di cart
+    if (!isset($_SESSION['cart'][$productId][$sizeId])) {
+        header("Location: index.php?page=cart");
+        exit;
+    }
+
+    // Ambil stok asli dari DB
+    $stmt = $pdo->prepare("
+        SELECT stock FROM product_sizes
+        WHERE product_id = ? AND size_id = ?
+    ");
+    $stmt->execute([$productId, $sizeId]);
+    $stock = (int) $stmt->fetchColumn();
+
+    // Qty saat ini di cart
+    $currentQty = $_SESSION['cart'][$productId][$sizeId];
+
+    if ($type === 'plus') {
+
+        // ❗ CEGAH MELEBIHI STOK
+        if ($currentQty < $stock) {
+            $_SESSION['cart'][$productId][$sizeId]++;
+        }
+
+    } elseif ($type === 'minus') {
+
+        $_SESSION['cart'][$productId][$sizeId]--;
+
+        // Jika qty <= 0 → hapus item
+        if ($_SESSION['cart'][$productId][$sizeId] <= 0) {
+            unset($_SESSION['cart'][$productId][$sizeId]);
+
+            // Jika produk tidak punya size lagi → hapus produk
+            if (empty($_SESSION['cart'][$productId])) {
+                unset($_SESSION['cart'][$productId]);
             }
         }
     }
+
     header("Location: index.php?page=cart");
     exit;
 }
+
+
 
 // 4. PROSES CHECKOUT (Simpan ke DB)
 if ($action == 'checkout') {
@@ -65,18 +126,38 @@ if ($action == 'checkout') {
         $invoice = 'INV-' . date('Ymd') . '-' . rand(100, 999);
         $total_price = 0;
         
-        // Ambil harga terbaru dari DB untuk keamanan
-        $ids = array_keys($_SESSION['cart']);
-        $in  = str_repeat('?,', count($ids) - 1) . '?';
-        $stmt = $pdo->prepare("SELECT * FROM products WHERE id IN ($in)");
-        $stmt->execute($ids);
-        $products_db = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total_price = 0;
 
-        // Hitung Grand Total
-        foreach ($products_db as $p) {
-            $qty = $_SESSION['cart'][$p['id']];
-            $total_price += $p['price'] * $qty;
+        foreach ($_SESSION['cart'] as $productId => $sizes) {
+
+            foreach ($sizes as $sizeId => $qty) {
+
+                // Ambil harga produk
+                $stmt = $pdo->prepare("SELECT price FROM products WHERE id = ?");
+                $stmt->execute([$productId]);
+                $price = $stmt->fetchColumn();
+
+                $total_price += $price * $qty;
+
+                // Insert order_items (WAJIB ada size_id)
+                $stmtItem->execute([
+                    $order_id,
+                    $productId,
+                    $sizeId,
+                    $qty,
+                    $price
+                ]);
+
+                // Kurangi stok size
+                $stmt = $pdo->prepare("
+                    UPDATE product_sizes
+                    SET stock = stock - ?
+                    WHERE product_id = ? AND size_id = ?
+                ");
+                $stmt->execute([$qty, $productId, $sizeId]);
+            }
         }
+
 
         // B. Insert ke Tabel ORDERS
         $sqlOrder = "INSERT INTO orders (user_id, invoice_number, total_price, status, created_at) VALUES (?, ?, ?, 'pending', NOW())";
@@ -104,20 +185,6 @@ if ($action == 'checkout') {
         $pdo->rollBack();
         die("Terjadi kesalahan: " . $e->getMessage());
     }
-}
-
-// 5. VIEW CART (Tampilkan Data)
-// Jika keranjang kosong
-if (empty($_SESSION['cart'])) {
-    $cartItems = [];
-} else {
-    // Ambil detail produk berdasarkan ID yg ada di session
-    $ids = array_keys($_SESSION['cart']);
-    // Trik SQL WHERE IN (?,?,?)
-    $in  = str_repeat('?,', count($ids) - 1) . '?';
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE id IN ($in)");
-    $stmt->execute($ids);
-    $cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // Load View
