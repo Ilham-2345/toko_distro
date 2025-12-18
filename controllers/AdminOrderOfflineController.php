@@ -1,4 +1,10 @@
 <?php
+// Pastikan admin login
+if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'pegawai'])) {
+    header("Location: index.php?page=login");
+    exit;
+}
+
 // SIMPAN DATA
 if ($action === 'store') {
 

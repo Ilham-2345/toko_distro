@@ -2,7 +2,7 @@
 // controllers/AdminOrderController.php
 
 // Pastikan admin login
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'pegawai'])) {
     header("Location: index.php?page=login");
     exit;
 }

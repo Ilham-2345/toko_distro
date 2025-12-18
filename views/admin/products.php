@@ -1,6 +1,6 @@
 <?php
 // Hanya admin yang boleh akses
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+if (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'pegawai'])) {
     header("Location: index.php?page=login");
     exit;
 }
@@ -148,55 +148,55 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="alert alert-danger">Produk berhasil dihapus.</div>
     <?php endif; ?>
 
+    <?php if($_SESSION['user']['role'] == 'admin'): ?>
+        <!-- Form Tambah Produk -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="mb-3">Tambah Produk Baru</h4>
 
-    <!-- Form Tambah Produk -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h4 class="mb-3">Tambah Produk Baru</h4>
+                <form action="index.php?page=admin_products&action=add" 
+                    method="POST" 
+                    enctype="multipart/form-data" 
+                    class="row g-3">
 
-            <form action="index.php?page=admin_products&action=add" 
-                  method="POST" 
-                  enctype="multipart/form-data" 
-                  class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Nama Produk</label>
+                        <input type="text" name="name" class="form-control" placeholder="Nama Produk" required>
+                    </div>
 
-                <div class="col-md-6">
-                    <label class="form-label">Nama Produk</label>
-                    <input type="text" name="name" class="form-control" placeholder="Nama Produk" required>
-                </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Harga</label>
+                        <input type="number" name="price" class="form-control" placeholder="Harga" required>
+                    </div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Harga</label>
-                    <input type="number" name="price" class="form-control" placeholder="Harga" required>
-                </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="category_id" class="form-select" required>
+                            <option value="">-- Pilih Kategori --</option>
+                            <?php foreach($categories as $c): ?>
+                                <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Kategori</label>
-                    <select name="category_id" class="form-select" required>
-                        <option value="">-- Pilih Kategori --</option>
-                        <?php foreach($categories as $c): ?>
-                            <option value="<?= $c['id'] ?>"><?= $c['name'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+                    <div class="mb-3">
+                        <label for="description-area" class="form-label">Description</label>
+                        <textarea class="form-control" name="description" id="description-area" rows="3"></textarea>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="description-area" class="form-label">Description</label>
-                    <textarea class="form-control" name="description" id="description-area" rows="3"></textarea>
-                </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Gambar Produk</label>
+                        <input type="file" name="image" class="form-control" required>
+                    </div>
 
-                <div class="col-md-6">
-                    <label class="form-label">Gambar Produk</label>
-                    <input type="file" name="image" class="form-control" required>
-                </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-dark px-4">Simpan Produk</button>
+                    </div>
 
-                <div class="col-12">
-                    <button type="submit" class="btn btn-dark px-4">Simpan Produk</button>
-                </div>
-
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-
+    <?php endif; ?>
 
     <!-- Tabel Produk -->
     <div class="card shadow-sm">
@@ -213,7 +213,9 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <th>Nama</th>
                             <th>Kategori</th>
                             <th>Harga</th>
-                            <th class="text-center">Aksi</th>
+                            <?php if($_SESSION['user']['role'] == 'admin'): ?>
+                                <th class="text-center">Aksi</th>
+                            <?php endif; ?>
                         </tr>
                     </thead>
 
@@ -231,27 +233,29 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <td><?= $p['category_name'] ?: '-' ?></td>
                             <td>Rp <?= number_format(!empty($p['price']) ? $p['price'] : 0) ?></td>
 
-                            <td class="text-center">
-                                <button 
-                                    class="btn btn-success btn-sm px-3 btn-edit"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editModal"
-                                    data-id="<?= $p['id'] ?>"
-                                    data-name="<?= htmlspecialchars($p['name']) ?>"
-                                    data-price="<?= $p['price'] ?>"
-                                    data-category="<?= $p['category_id'] ?>"
-                                    data-description="<?= htmlspecialchars($p['description']) ?>"
-                                >
-                                    Edit
-                                </button>
+                            <?php if($_SESSION['user']['role'] == 'admin'): ?>
+                                <td class="text-center">
+                                    <button 
+                                        class="btn btn-success btn-sm px-3 btn-edit"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editModal"
+                                        data-id="<?= $p['id'] ?>"
+                                        data-name="<?= htmlspecialchars($p['name']) ?>"
+                                        data-price="<?= $p['price'] ?>"
+                                        data-category="<?= $p['category_id'] ?>"
+                                        data-description="<?= htmlspecialchars($p['description']) ?>"
+                                    >
+                                        Edit
+                                    </button>
 
 
-                                <a href="index.php?page=admin_products&delete_id=<?= $p['id'] ?>" 
-                                   class="btn btn-danger btn-sm px-3"
-                                   onclick="return confirm('Yakin ingin menghapus produk ini?')">
-                                    Hapus
-                                </a>
-                            </td>
+                                    <a href="index.php?page=admin_products&delete_id=<?= $p['id'] ?>" 
+                                    class="btn btn-danger btn-sm px-3"
+                                    onclick="return confirm('Yakin ingin menghapus produk ini?')">
+                                        Hapus
+                                    </a>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                         <?php $i++; ?>
                         <?php endforeach; ?>

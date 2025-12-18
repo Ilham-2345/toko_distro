@@ -124,8 +124,8 @@ if ($action == 'checkout') {
 
         // 1️⃣ INSERT ORDER
         $stmtOrder = $pdo->prepare("
-            INSERT INTO orders (user_id, invoice_number, total_price, status, payment_method, created_at, jenis)
-            VALUES (?, ?, 0, 'pending', 'QRIS', NOW(), 'Online')
+            INSERT INTO orders (user_id, invoice_number, total_price, status, payment_method, created_at, order_type)
+            VALUES (?, ?, 0, 'pending', 'QRIS', NOW(), 'online')
         ");
         $stmtOrder->execute([$user_id, $invoice]);
         $order_id = $pdo->lastInsertId();

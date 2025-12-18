@@ -6,7 +6,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 $action = isset($_GET['action']) ? $_GET['action'] : 'view';
 
 // Cek Role untuk akses folder admin
-if (strpos($page, 'admin') !== false && (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin')) {
+if (strpos($page, 'admin') !== false && (!isset($_SESSION['user']) || !in_array($_SESSION['user']['role'], ['admin', 'pegawai']))) {
     header("Location: index.php?page=login");
     exit;
 }
@@ -39,6 +39,9 @@ switch ($page) {
     case 'admin_dashboard':
         require 'controllers/DashboardController.php';
         break;
+    case 'admin_staff':
+        require 'controllers/AdminStaffController.php';
+        break;
     case 'admin_products':
         require 'controllers/ProductController.php';
         break;
@@ -56,6 +59,9 @@ switch ($page) {
         break;
     case 'admin_stock':
         require 'controllers/StockController.php';
+        break;
+    case 'admin_report':
+        require 'controllers/AdminReportController.php';
         break;
     case 'auth':
         require 'controllers/AuthController.php';

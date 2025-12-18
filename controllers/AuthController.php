@@ -31,6 +31,8 @@ if ($action == 'register') {
 
     $name     = trim($_POST['name']);
     $email    = trim($_POST['email']);
+    $address    = trim($_POST['address']);
+    $phone    = trim($_POST['phone']);
     $password = $_POST['password'];
 
     // Validasi sederhana
@@ -53,10 +55,10 @@ if ($action == 'register') {
 
     // Role default = user
     $stmt = $pdo->prepare("
-        INSERT INTO users (name, email, password, role)
-        VALUES (?, ?, ?, 'user')
+        INSERT INTO users (name, email, password, role, address, phone)
+        VALUES (?, ?, ?, 'user', ?, ?)
     ");
-    $stmt->execute([$name, $email, $hashedPassword]);
+    $stmt->execute([$name, $email, $hashedPassword, $address, $phone]);
 
     echo "<script>alert('Registrasi berhasil, silakan login'); window.location='index.php?page=login';</script>";
 }

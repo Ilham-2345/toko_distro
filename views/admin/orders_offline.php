@@ -1,6 +1,6 @@
 <?php include 'views/layouts/admin/header.php'; ?>
 <div class="container my-4" x-data="offlineOrder()">
-    <h3 class="fw-bold mb-4">Pesanan Offline (Kasir)</h3>
+    <h3 class="fw-bold mb-4">Manajemen Pesanan Offline (Kasir)</h3>
     <!-- FORM ORDER OFFLINE -->
     <div class="card mb-4">
         <div class="card-header fw-semibold">Tambah Pesanan Offline</div>
