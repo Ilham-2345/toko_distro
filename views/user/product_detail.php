@@ -83,21 +83,24 @@ $totalStock = array_sum(array_column($sizes, 'stock'));
                     <?php endforeach; ?>
                 </div>
 
-                <button type="submit" class="btn btn-dark" id="addToCartBtn" disabled>
-                    Add to Cart
-                </button>
+                <!-- DESKRIPSI -->
+                <p><?= nl2br($product['description']) ?></p>
+                <hr>
+
+                <div class="d-flex gap-3 align-items-center">
+                    <button type="submit" class="btn btn-dark" id="addToCartBtn" disabled>
+                        Add to Cart
+                    </button>
+                    <!-- TOMBOL -->
+                    <div>
+                        <a href="index.php" class="btn">Kembali</a>
+                    </div>
+                </div>
             </form>
+            
+            
 
 
-            <hr>
-
-            <!-- DESKRIPSI -->
-            <p><?= nl2br($product['description']) ?></p>
-
-            <!-- TOMBOL -->
-            <div class="mt-4">
-                <a href="index.php" class="btn btn-dark">Kembali</a>
-            </div>
 
         </div>
     </div>

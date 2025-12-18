@@ -1,3 +1,7 @@
+<?php
+$role = $_SESSION['user']['role'] ?? '';
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -79,13 +83,53 @@
     </div>
     
     <ul class="list-unstyled d-flex flex-column mt-5 ms-3 gap-3">
-      <li class="mb-3"><a href="index.php?page=admin_dashboard" class="text-dark text-decoration-none">Dashboard</a></li>
-      <li class="mb-3"><a href="index.php?page=admin_products" class="text-dark text-decoration-none">Kelola Produk</a></li>
-      <li class="mb-3"><a href="index.php?page=admin_categories" class="text-dark text-decoration-none">Kelola Kategori</a></li>
-      <li class="mb-3"><a href="index.php?page=admin_stock" class="text-dark text-decoration-none">Kelola Stok</a></li>
-      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Pesanan</a></li>
-      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Laporan</a></li>
-    </ul>
+      <!-- Dashboard (ADMIN & STAFF) -->
+      <li>
+        <a href="index.php?page=admin_dashboard" class="text-dark text-decoration-none">
+          Dashboard
+        </a>
+      </li>
+      <!-- Kelola Produk (ADMIN & STAFF) -->
+      <li>
+        <a href="index.php?page=admin_products" class="text-dark text-decoration-none">
+          Kelola Produk
+        </a>
+      </li>
+      <!-- STAFF & ADMIN -->
+      <li>
+        <a href="index.php?page=admin_stock" class="text-dark text-decoration-none">
+          Kelola Stok
+        </a>
+      </li>
+      <li>
+        <a href="index.php?page=admin_orders" class="text-dark text-decoration-none">
+          Kelola Pesanan
+        </a>
+      </li>
+      <li>
+        <a href="index.php?page=admin_orders_offline" class="text-dark text-decoration-none">
+          Kelola Pesanan - Offline
+        </a>
+      </li>
 
+      <!-- HANYA ADMIN -->
+      <?php if ($role === 'admin'): ?>
+        <li>
+          <a href="index.php?page=admin_staff" class="text-dark text-decoration-none">
+            Staff & Kasir
+          </a>
+        </li>
+        <li>
+          <a href="index.php?page=admin_categories" class="text-dark text-decoration-none">
+            Kelola Kategori
+          </a>
+        </li>
+        <li>
+          <a href="index.php?page=admin_report" class="text-dark text-decoration-none">
+            Laporan
+          </a>
+        </li>
+      <?php endif; ?>
+    </ul>
   </aside>
 </div>

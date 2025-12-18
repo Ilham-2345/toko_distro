@@ -232,6 +232,11 @@
                             <i class="bi bi-person me-2"></i> Profile
                         </a>
                     </li>
+                    <li>
+                        <a class="dropdown-item" href="index.php?page=orders">
+                            <i class="bi bi-person me-2"></i> Orders
+                        </a>
+                    </li>
 
                     <!-- DASHBOARD (STAFF & ADMIN) -->
                     <?php if (
@@ -254,7 +259,6 @@
                             <i class="bi bi-box-arrow-right me-2"></i> Logout
                         </a>
                     </li>
-
                 </ul>
             </div>
 

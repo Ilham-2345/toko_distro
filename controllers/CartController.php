@@ -102,17 +102,14 @@ if ($action == 'update') {
     exit;
 }
 
-
-
-// 4. PROSES CHECKOUT (Simpan ke DB)
+// 4. PROSES CHECKOUT
 if ($action == 'checkout') {
-    // Cek Login dulu
+
     if (!isset($_SESSION['user'])) {
-        echo "<script>alert('Silakan Login untuk melanjutkan checkout!'); window.location='index.php?page=login';</script>";
+        echo "<script>alert('Silakan login');location='index.php?page=login'</script>";
         exit;
     }
 
-    // Cek Keranjang Kosong
     if (empty($_SESSION['cart'])) {
         header("Location: index.php?page=shop");
         exit;
@@ -121,25 +118,42 @@ if ($action == 'checkout') {
     try {
         $pdo->beginTransaction();
 
-        // A. Hitung Total & Siapkan Data
         $user_id = $_SESSION['user']['id'];
-        $invoice = 'INV-' . date('Ymd') . '-' . rand(100, 999);
-        $total_price = 0;
-        
+        $invoice = 'INV-' . date('Ymd') . '-' . rand(100,999);
         $total_price = 0;
 
+        // 1️⃣ INSERT ORDER
+        $stmtOrder = $pdo->prepare("
+            INSERT INTO orders (user_id, invoice_number, total_price, status, payment_method, created_at, order_type)
+            VALUES (?, ?, 0, 'pending', 'QRIS', NOW(), 'online')
+        ");
+        $stmtOrder->execute([$user_id, $invoice]);
+        $order_id = $pdo->lastInsertId();
+
+        // 2️⃣ PREPARE STATEMENTS (WAJIB SEBELUM LOOP)
+        $stmtPrice = $pdo->prepare("SELECT price FROM products WHERE id = ?");
+        $stmtItem  = $pdo->prepare("
+            INSERT INTO order_items (order_id, product_id, size_id, quantity, price)
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        $stmtStock = $pdo->prepare("
+            UPDATE product_sizes
+            SET stock = stock - ?
+            WHERE product_id = ? AND size_id = ?
+        ");
+
+        // 3️⃣ LOOP CART
         foreach ($_SESSION['cart'] as $productId => $sizes) {
+
+            $stmtPrice->execute([$productId]);
+            $price = $stmtPrice->fetchColumn();
 
             foreach ($sizes as $sizeId => $qty) {
 
-                // Ambil harga produk
-                $stmt = $pdo->prepare("SELECT price FROM products WHERE id = ?");
-                $stmt->execute([$productId]);
-                $price = $stmt->fetchColumn();
+                $subtotal = $price * $qty;
+                $total_price += $subtotal;
 
-                $total_price += $price * $qty;
-
-                // Insert order_items (WAJIB ada size_id)
+                // Insert item
                 $stmtItem->execute([
                     $order_id,
                     $productId,
@@ -149,48 +163,76 @@ if ($action == 'checkout') {
                 ]);
 
                 // Kurangi stok size
-                $stmt = $pdo->prepare("
-                    UPDATE product_sizes
-                    SET stock = stock - ?
-                    WHERE product_id = ? AND size_id = ?
-                ");
-                $stmt->execute([$qty, $productId, $sizeId]);
+                $stmtStock->execute([
+                    $qty,
+                    $productId,
+                    $sizeId
+                ]);
             }
         }
 
-
-        // B. Insert ke Tabel ORDERS
-        $sqlOrder = "INSERT INTO orders (user_id, invoice_number, total_price, status, created_at) VALUES (?, ?, ?, 'pending', NOW())";
-        $stmtOrder = $pdo->prepare($sqlOrder);
-        $stmtOrder->execute([$user_id, $invoice, $total_price]);
-        $order_id = $pdo->lastInsertId();
-
-        // C. Insert ke Tabel ORDER_ITEMS
-        $sqlItem = "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)";
-        $stmtItem = $pdo->prepare($sqlItem);
-
-        foreach ($products_db as $p) {
-            $qty = $_SESSION['cart'][$p['id']];
-            $stmtItem->execute([$order_id, $p['id'], $qty, $p['price']]);
-        }
+        // 4️⃣ UPDATE TOTAL PRICE
+        $stmtUpdate = $pdo->prepare("
+            UPDATE orders SET total_price = ? WHERE id = ?
+        ");
+        $stmtUpdate->execute([$total_price, $order_id]);
 
         $pdo->commit();
 
-        // D. Kosongkan Cart & Redirect
         unset($_SESSION['cart']);
-        header("Location: index.php?page=cart&status=success&inv=$invoice&total=$total_price");
+        header("Location: index.php?page=cart&status=success&order_id=$order_id");
         exit;
+
 
     } catch (Exception $e) {
         $pdo->rollBack();
-        die("Terjadi kesalahan: " . $e->getMessage());
+        die("Checkout error: " . $e->getMessage());
     }
 }
 
-// Load View
 if (isset($_GET['status']) && $_GET['status'] == 'success') {
+
+    if (!isset($_GET['order_id'])) {
+        header("Location: index.php?page=shop");
+        exit;
+    }
+
+    $order_id = (int) $_GET['order_id'];
+    $user_id  = $_SESSION['user']['id'];
+
+    // Ambil data order
+    $stmt = $pdo->prepare("
+        SELECT o.*, u.name, u.phone, u.address
+        FROM orders o
+        JOIN users u ON u.id = o.user_id
+        WHERE o.id = ? AND o.user_id = ?
+    ");
+    $stmt->execute([$order_id, $user_id]);
+    $order = $stmt->fetch();
+
+    if (!$order) {
+        die('Invoice tidak ditemukan');
+    }
+
+    // Ambil item order + size
+    $stmtItems = $pdo->prepare("
+        SELECT 
+            oi.quantity,
+            oi.price,
+            p.name AS product_name,
+            p.image,
+            s.name AS size_name
+        FROM order_items oi
+        JOIN products p ON p.id = oi.product_id
+        JOIN sizes s ON s.id = oi.size_id
+        WHERE oi.order_id = ?
+    ");
+    $stmtItems->execute([$order_id]);
+    $items = $stmtItems->fetchAll();
+
     include 'views/user/checkout_success.php';
-} else {
+    exit;
+}else {
     include 'views/user/cart.php';
 }
 ?>

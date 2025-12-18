@@ -21,7 +21,7 @@
     </section>
 
     <div class="text-light d-flex align-items-center justify-content-evenly" style="height: 80px; background: black">
-        <p style="margin: 0">ThanksCompany. All Rights Reserved.</p>
+        <p style="margin: 0">DistroStore. All Rights Reserved.</p>
         <p style="margin: 0">Terms & Conditions | Privacy Policy</p>
     </div>
     
