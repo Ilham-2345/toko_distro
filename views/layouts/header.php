@@ -160,7 +160,7 @@
       <i class="bi bi-justify"></i>
     </div>
 
-    <a href="index.php?page=home" class="logo">thanksjabbran®</a>
+    <a href="index.php?page=home" class="logo">DistroStore®</a>
 
     <div class="icons">
       <a href="index.php?page=shop" class="text-dark"><i class="bi bi-search"></i></a>
