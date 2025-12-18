@@ -31,7 +31,9 @@ switch ($page) {
     case 'profile':
         include 'views/user/profile.php';
         break;
-
+    case 'orders':
+        include 'controllers/OrderController.php';
+        break;
     
     // Fitur Admin
     case 'admin_dashboard':
@@ -44,7 +46,13 @@ switch ($page) {
         require 'controllers/CategoriesController.php';
         break;
     case 'admin_orders':
-        require 'controllers/OrderController.php';
+        include 'controllers/AdminOrderController.php';
+        break;
+    case 'admin_orders_offline':
+        include 'controllers/AdminOrderOfflineController.php';
+        break;
+    case 'admin_order_detail':
+        include 'controllers/AdminOrderDetailController.php';
         break;
     case 'admin_stock':
         require 'controllers/StockController.php';

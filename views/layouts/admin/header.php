@@ -83,7 +83,8 @@
       <li class="mb-3"><a href="index.php?page=admin_products" class="text-dark text-decoration-none">Kelola Produk</a></li>
       <li class="mb-3"><a href="index.php?page=admin_categories" class="text-dark text-decoration-none">Kelola Kategori</a></li>
       <li class="mb-3"><a href="index.php?page=admin_stock" class="text-dark text-decoration-none">Kelola Stok</a></li>
-      <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Kelola Pesanan</a></li>
+      <li class="mb-3"><a href="index.php?page=admin_orders" class="text-dark text-decoration-none">Kelola Pesanan</a></li>
+      <li class="mb-3"><a href="index.php?page=admin_orders_offline" class="text-dark text-decoration-none">Kelola Pesanan - Offline</a></li>
       <li class="mb-3"><a href="index.php?page=contact" class="text-dark text-decoration-none">Laporan</a></li>
     </ul>
 

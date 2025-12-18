@@ -1,32 +1,97 @@
 <?php include 'views/layouts/header.php'; ?>
 
 <style>
-    .success-box { max-width: 600px; margin: 80px auto; padding: 40px; text-align: center; border: 2px solid #000; }
-    .success-icon { font-size: 4rem; margin-bottom: 20px; }
-    .bank-details { background: #f4f4f4; padding: 20px; margin: 20px 0; text-align: left; }
-    .btn-wa { background: #25D366; color: white; padding: 10px 20px; text-decoration: none; display: inline-block; font-weight: bold; margin-top: 10px; }
+.invoice-box {
+    max-width: 900px;
+    margin: 60px auto;
+    border: 2px solid #000;
+    padding: 30px;
+}
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.badge-status {
+    padding: 5px 12px;
+    border-radius: 5px;
+    background: #ffc107;
+    font-weight: bold;
+}
+.table th {
+    background: #000;
+    color: #fff;
+}
 </style>
 
-<div class="success-box">
-    <div class="success-icon">✓</div>
-    <h1>Pesanan Berhasil Dibuat!</h1>
-    <p>Terima kasih sudah berbelanja. Mohon selesaikan pembayaran agar pesanan segera diproses.</p>
+<div class="invoice-box">
 
-    <div class="bank-details">
-        <p><strong>Invoice ID:</strong> <?= $_GET['inv'] ?></p>
-        <p><strong>Total Pembayaran:</strong> Rp <?= number_format($_GET['total']) ?></p>
-        <hr>
-        <p>Silakan transfer ke rekening berikut:</p>
-        <h3>BCA: 123-456-7890</h3>
-        <p>A/n PT. Thanks Jokowi Indonesia</p>
+    <div class="invoice-header">
+        <div>
+            <h3>Invoice</h3>
+            <p><strong>No Invoice:</strong> <?= $order['invoice_number'] ?></p>
+            <p><strong>Tanggal:</strong> <?= date('d/m/Y', strtotime($order['created_at'])) ?></p>
+        </div>
+        <div>
+            <span class="badge-status"><?= strtoupper($order['status']) ?></span>
+        </div>
     </div>
 
-    <p>Sudah Transfer? Konfirmasi via WhatsApp:</p>
-    <a href="https://wa.me/628123456789?text=Halo%20Admin,%20saya%20sudah%20transfer%20untuk%20invoice%20<?= $_GET['inv'] ?>" class="btn-wa" target="_blank">
-        Konfirmasi Pembayaran
+    <hr>
+
+    <h5>Informasi Pelanggan</h5>
+    <p>
+        <strong>Nama:</strong> <?= $order['name'] ?><br>
+        <strong>Telepon:</strong> <?= $order['phone'] ?><br>
+        <strong>Alamat:</strong> <?= $order['address'] ?>
+    </p>
+
+    <hr>
+
+    <h5>Detail Pesanan</h5>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produk</th>
+                <th>Size</th>
+                <th>Harga</th>
+                <th>Qty</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($items as $item): ?>
+            <tr>
+                <td>
+                    <img src="uploads/<?= $item['image'] ?>" width="60"><br>
+                    <?= $item['product_name'] ?>
+                </td>
+                <td><?= $item['size_name'] ?></td>
+                <td>Rp <?= number_format($item['price']) ?></td>
+                <td><?= $item['quantity'] ?></td>
+                <td>Rp <?= number_format($item['price'] * $item['quantity']) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h5>Total Pembayaran: Rp <?= number_format($order['total_price']) ?></h5>
+        <p>Metode Pembayaran: <strong><?= $order['payment_method'] ?></strong></p>
+    </div>
+
+    <hr>
+
+    <a href="https://wa.me/628123456789?text=Halo Admin, saya sudah transfer untuk invoice <?= $order['invoice_number'] ?>"
+       class="btn btn-success" target="_blank">
+        Konfirmasi Pembayaran by WhatsApp
     </a>
-    <br><br>
-    <a href="index.php?page=shop" style="text-decoration: underline; color: black;">Kembali ke Beranda</a>
+
+    <a href="index.php?page=shop" class="btn btn-outline-dark ms-2">
+        Kembali Belanja
+    </a>
+
 </div>
 
 <?php include 'views/layouts/footer.php'; ?>
