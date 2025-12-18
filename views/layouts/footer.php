@@ -1,7 +1,7 @@
     <div class="" style="width: 100px; margin: 0px auto; border: 1px solid black"></div>
     <section class="d-flex" style="height: 50vh">
         <div class="d-flex align-items-center ps-5">
-            <div class="logo">thanksjabbran®</div>
+            <div class="logo">distrostore®</div>
         </div>
         <div class="d-flex justify-content-evenly align-items-center w-100">
             <div class="d-flex flex-column">

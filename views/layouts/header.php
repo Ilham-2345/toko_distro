@@ -187,7 +187,7 @@
       <i class="bi bi-justify"></i>
     </div>
 
-    <a href="index.php?page=home" class="logo">thanksjabbran®</a>
+    <a href="index.php?page=home" class="logo">DistroStore®</a>
 
     <div class="icons d-flex align-items-center gap-3">
 
