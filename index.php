@@ -11,6 +11,7 @@ if (strpos($page, 'admin') !== false && (!isset($_SESSION['user']) || !in_array(
     exit;
 }
 
+
 // Switch Page
 switch ($page) {
     case 'home':
