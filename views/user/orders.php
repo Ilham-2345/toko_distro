@@ -56,14 +56,15 @@
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
-
-                <hr>
+                    
+                    <hr>
                     <div class="d-flex justify-content-between align-items-center">
                         <small class="text-muted">Klik detail untuk melihat invoice lengkap</small>
                         <a href="index.php?page=invoice&id=<?= $order['id'] ?>" class="btn btn-dark btn-sm">
                             Lihat Invoice
                         </a>
                     </div>
+                </div>
             </div>
         <?php endforeach; ?>
 
