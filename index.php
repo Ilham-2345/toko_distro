@@ -35,6 +35,9 @@ switch ($page) {
     case 'orders':
         include 'controllers/OrderController.php';
         break;
+    case 'invoice':
+        include 'controllers/OrderController.php';
+        break;
     
     // Fitur Admin
     case 'admin_dashboard':
