@@ -38,6 +38,9 @@ switch ($page) {
     case 'invoice':
         include 'controllers/OrderController.php';
         break;
+    case 'checkout':
+        include 'controllers/CartController.php';
+        break;
     
     // Fitur Admin
     case 'admin_dashboard':
@@ -74,6 +77,15 @@ switch ($page) {
     // Fitur User
     case 'cart':
         require 'controllers/CartController.php';
+        break;
+    case 'order':
+        require 'controllers/CartController.php';
+        break;
+    case 'callback':
+        require 'controllers/CallbackController.php';
+        break;
+    case 'invoice_print':
+        require 'controllers/InvoiceController.php';
         break;
         
     default:

@@ -73,11 +73,14 @@
             </div>
 
             <hr>
-
+            
+            <a href="index.php?page=invoice_print&action=print&id=<?= $order['id'] ?>" 
+                class="btn btn-danger btn-sm">
+                Print PDF
+            </a>
             <a href="index.php?page=orders" class="btn btn-dark btn-sm">
                 Kembali
             </a>
-
         </div>
     </section>
 </div>
