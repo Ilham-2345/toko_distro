@@ -164,7 +164,7 @@ if ($action == 'checkout') {
     // Generate token
     $snap_token = '';
 
-    \Midtrans\Config::$serverKey = 'SB-Mid-server-Abx9Ib5nEaqaM-JV5BOQyi8Z';
+    \Midtrans\Config::$serverKey = '';
     \Midtrans\Config::$isProduction = false;
     \Midtrans\Config::$isSanitized = true;
     \Midtrans\Config::$is3ds = true;
@@ -401,79 +401,6 @@ if ($action == 'pending') {
 
 // 4.2 PROSES PAYMENT
 if ($action == 'payments') {
-    // INSERT TO DATABASE
-    // try {
-    //     $pdo->beginTransaction();
-
-    //     $user_id = $_SESSION['user']['id'];
-    //     $invoice = 'INV-' . date('Ymd') . '-' . rand(100,999);
-    //     $total_price = 0;
-
-    //     // 1️⃣ INSERT ORDER
-    //     $stmtOrder = $pdo->prepare("
-    //         INSERT INTO orders (user_id, invoice_number, total_price, status, payment_method, created_at, order_type)
-    //         VALUES (?, ?, 0, 'pending', 'QRIS', NOW(), 'online')
-    //     ");
-    //     $stmtOrder->execute([$user_id, $invoice]);
-    //     $order_id = $pdo->lastInsertId();
-
-    //     // 2️⃣ PREPARE STATEMENTS (WAJIB SEBELUM LOOP)
-    //     $stmtPrice = $pdo->prepare("SELECT price FROM products WHERE id = ?");
-    //     $stmtItem  = $pdo->prepare("
-    //         INSERT INTO order_items (order_id, product_id, size_id, quantity, price)
-    //         VALUES (?, ?, ?, ?, ?)
-    //     ");
-    //     $stmtStock = $pdo->prepare("
-    //         UPDATE product_sizes
-    //         SET stock = stock - ?
-    //         WHERE product_id = ? AND size_id = ?
-    //     ");
-
-    //     // 3️⃣ LOOP CART
-    //     foreach ($_SESSION['cart'] as $productId => $sizes) {
-
-    //         $stmtPrice->execute([$productId]);
-    //         $price = $stmtPrice->fetchColumn();
-
-    //         foreach ($sizes as $sizeId => $qty) {
-
-    //             $subtotal = $price * $qty;
-    //             $total_price += $subtotal;
-
-    //             // Insert item
-    //             $stmtItem->execute([
-    //                 $order_id,
-    //                 $productId,
-    //                 $sizeId,
-    //                 $qty,
-    //                 $price
-    //             ]);
-
-    //             // Kurangi stok size
-    //             $stmtStock->execute([
-    //                 $qty,
-    //                 $productId,
-    //                 $sizeId
-    //             ]);
-    //         }
-    //     }
-
-    //     // 4️⃣ UPDATE TOTAL PRICE
-    //     $stmtUpdate = $pdo->prepare("
-    //         UPDATE orders SET total_price = ? WHERE id = ?
-    //     ");
-    //     $stmtUpdate->execute([$total_price, $order_id]);
-
-    //     $pdo->commit();
-
-    //     unset($_SESSION['cart']);
-    //     header("Location: index.php?page=cart&status=success&order_id=$order_id");
-    //     exit;
-    // } catch (Exception $e) {
-    //     $pdo->rollBack();
-    //     die("Checkout error: " . $e->getMessage());
-    // }
-
     if (!isset($_SESSION['user'])) {
         echo "<script>alert('Silakan login');location='index.php?page=login'</script>";
         exit;
